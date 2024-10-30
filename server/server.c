@@ -5,11 +5,13 @@
 #include <arpa/inet.h>
 #include <string.h>
 
+#include "server.h"
 #include "errnum.h"
 
 
 int main(void) {
     int                 e = 0;
+    sckflags_t          servflags = 0;
     int                 listenfd;
     struct sockaddr_in  servaddr;
 

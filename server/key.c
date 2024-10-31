@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <unistd.h>
+#include <sys/socket.h>
 #include <termios.h>
 
 #include "server.h"
@@ -23,11 +24,19 @@ void *th_key_handler(void *arg) {
     setcanon();
 
 
-    if((*pflags & F_LISTENFD_CLOSED) == 0 && close(listenfd)) {
-        errnum(ERR_CLOSE_SCK);
-        *pflags |= F_TH_ERR;
+    if((*pflags & F_LISTENFD_CLOSED) == 0) {
+        if(shutdown(listenfd, SHUT_RD)) {
+            errnum(ERR_SHUTDOWN_SCK);
+            return NULL;
+        }
+
+        if(close(listenfd)) {
+            errnum(ERR_CLOSE_SCK);
+            return NULL;
+        }
     }
 
+    *pflags |= F_LISTENFD_CLOSED;
     return NULL;
 }
 

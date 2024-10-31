@@ -58,6 +58,8 @@ int main(void) {
     puts("SETUP SUCCEEDED: accepting incoming connections");
     while((thflags & F_CH_EXIT) == 0) {
         if((connfd = accept(listenfd, NULL, NULL)) == -1) {
+            if(thflags & F_LISTENFD_CLOSED) break;
+
             e = errnum(ERR_ACCEPT_CONN);
             goto close_listenfd;
         }
@@ -68,5 +70,6 @@ int main(void) {
         if((thflags & F_LISTENFD_CLOSED) == 0 && close(listenfd))
             e = errnum(ERR_CLOSE_SCK);
 
+        if(!e) puts("Exit code.");
         return e;
 }

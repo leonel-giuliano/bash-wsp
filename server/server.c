@@ -3,9 +3,11 @@
 #include <sys/socket.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
+#include <pthread.h>
 #include <string.h>
 
 #include "server.h"
+#include "key.h"
 #include "errnum.h"
 
 
@@ -14,6 +16,8 @@ int main(void) {
     sckflags_t          servflags = 0;
     int                 listenfd;
     struct sockaddr_in  servaddr;
+    th_key_arg_t        th_key_arg;
+    pthread_t           th_key;
 
     errnum_program_name = "bash-wsp";
 
@@ -40,8 +44,19 @@ int main(void) {
     }
 
 
+    th_key_arg.listenfd = listenfd;
+    th_key_arg.pflags = &servflags;
+    e = pthread_create(&th_key, NULL, th_key_handler, (void *)&th_key_arg);
+
+    if(e) {
+        errnum(ERR_NEW_TH);
+        goto close_listenfd;
+    }
+
+
     close_listenfd:
-        if(close(listenfd)) e = errnum(ERR_CLOSE_SCK);
+        if((servflags & F_LISTENFD_CLOSED) == 0 && close(listenfd))
+            e = errnum(ERR_CLOSE_SCK);
 
         return e;
 }

@@ -10,9 +10,9 @@
 
 
 #ifdef _DEBUG_ON
-    #define dbassert(cond) assert(cond);
+    #define DBASSERT(cond) assert(cond);
 #else
-    #define dbassert(cond) ((void)0);
+    #define DBASSERT(cond) ((void)0);
 #endif
 
 

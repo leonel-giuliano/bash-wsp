@@ -56,7 +56,7 @@ int main(void) {
 
 
     puts("SETUP SUCCEEDED: accepting incoming connections");
-    while((thflags & F_CH_EXIT) == 0) {
+    while((thflags & (F_CH_EXIT | F_TH_ERR)) == 0) {
         if((connfd = accept(listenfd, NULL, NULL)) == -1) {
             if(thflags & F_LISTENFD_CLOSED) break;
 

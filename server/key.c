@@ -27,11 +27,13 @@ void *th_key_handler(void *arg) {
     if((*pflags & F_LISTENFD_CLOSED) == 0) {
         if(shutdown(listenfd, SHUT_RD)) {
             errnum(ERR_SHUTDOWN_SCK);
+            *pflags |= F_TH_ERR;
             return NULL;
         }
 
         if(close(listenfd)) {
             errnum(ERR_CLOSE_SCK);
+            *pflags |= F_TH_ERR;
             return NULL;
         }
     }

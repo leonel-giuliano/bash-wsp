@@ -8,6 +8,7 @@
 
 #include "server.h"
 #include "key.h"
+#include "th-conn.h"
 #include "errnum.h"
 
 
@@ -17,7 +18,8 @@ int main(void) {
     int                 listenfd, connfd;
     struct sockaddr_in  servaddr;
     th_key_arg_t        th_key_arg;
-    pthread_t           th_key;
+    th_conn_arg         th_conn_arg[TH_CONN_POOL];
+    pthread_t           th_key, th_conn[TH_CONN_POOL];
 
     errnum_program_name = "bash-wsp";
 

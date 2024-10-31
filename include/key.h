@@ -7,7 +7,7 @@
 
 typedef struct {
     int         listenfd;
-    sckflags_t  *pflags;
+    thflags_t   *pflags;
 } th_key_arg_t;
 
 

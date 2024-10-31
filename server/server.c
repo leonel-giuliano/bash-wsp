@@ -13,8 +13,8 @@
 
 int main(void) {
     int                 e = 0;
-    sckflags_t          servflags = 0;
-    int                 listenfd;
+    thflags_t           thflags = 0;
+    int                 listenfd, connfd;
     struct sockaddr_in  servaddr;
     th_key_arg_t        th_key_arg;
     pthread_t           th_key;
@@ -44,8 +44,9 @@ int main(void) {
     }
 
 
+    puts("Initializing threads...");
     th_key_arg.listenfd = listenfd;
-    th_key_arg.pflags = &servflags;
+    th_key_arg.pflags = &thflags;
     e = pthread_create(&th_key, NULL, th_key_handler, (void *)&th_key_arg);
 
     if(e) {
@@ -54,8 +55,17 @@ int main(void) {
     }
 
 
+    puts("SETUP SUCCEEDED: accepting incoming connections");
+    while((thflags & F_CH_EXIT) == 0) {
+        if((connfd = accept(listenfd, NULL, NULL)) == -1) {
+            e = errnum(ERR_ACCEPT_CONN);
+            goto close_listenfd;
+        }
+    }
+
+
     close_listenfd:
-        if((servflags & F_LISTENFD_CLOSED) == 0 && close(listenfd))
+        if((thflags & F_LISTENFD_CLOSED) == 0 && close(listenfd))
             e = errnum(ERR_CLOSE_SCK);
 
         return e;

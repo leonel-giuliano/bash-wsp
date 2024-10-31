@@ -10,7 +10,7 @@
 
 void *th_key_handler(void *arg) {
     int         listenfd = ((th_key_arg_t *)arg)->listenfd;
-    sckflags_t  *pflags = ((th_key_arg_t *)arg)->pflags;
+    thflags_t   *pflags = ((th_key_arg_t *)arg)->pflags;
 
     DBASSERT((*pflags & F_CH_EXIT) == 0);
 

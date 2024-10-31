@@ -13,7 +13,7 @@
 
 // FLAGS
 
-typedef volatile uint8_t sckflags_t;
+typedef volatile uint8_t thflags_t;
 
 #define F_LISTENFD_CLOSED   0x01
 #define F_CH_EXIT           0x02
